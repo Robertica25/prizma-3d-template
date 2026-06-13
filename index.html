@@ -3,27 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PRIZMA — Studio de web imersiv & 3D</title>
-<meta name="description" content="PRIZMA — studio digital care construiește experiențe web 3D, WebGL, motion și branding pentru companii care vor să iasă din tipar.">
-<meta name="keywords" content="web design 3D, WebGL, studio creativ București, experiențe imersive, motion design, branding digital">
+<title>Robert Popa — Builder · Web 3D, AI & Automatizări</title>
+<meta name="description" content="Robert Popa — builder care construiește produse digitale automatizate: web design 3D, e-commerce, aplicații mobile și motoare de marketing cu AI. Din București.">
+<meta name="keywords" content="Robert Popa, web developer București, web design 3D, WebGL, automatizări AI, React Native, full-stack, freelancer">
 <meta name="theme-color" content="#060608">
-<link rel="canonical" href="https://prizma.studio">
+<link rel="canonical" href="https://robertpopa.dev">
 
-<meta property="og:type" content="website">
+<meta property="og:type" content="profile">
 <meta property="og:locale" content="ro_RO">
-<meta property="og:site_name" content="PRIZMA">
-<meta property="og:title" content="PRIZMA — Studio de web imersiv & 3D">
-<meta property="og:description" content="Experiențe web 3D, WebGL, motion și branding pentru companii care vor să iasă din tipar.">
-<meta property="og:url" content="https://prizma.studio">
+<meta property="og:title" content="Robert Popa — Builder · Web 3D, AI & Automatizări">
+<meta property="og:description" content="Construiesc produse digitale automatizate care par din viitor. Web 3D, e-commerce, mobile, AI.">
 <meta name="twitter:card" content="summary_large_image">
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ProfessionalService","name":"PRIZMA","description":"Studio digital care construiește experiențe web 3D, WebGL, motion și branding.","url":"https://prizma.studio","telephone":"+40 721 000 000","email":"hello@prizma.studio","priceRange":"$$$","address":{"@type":"PostalAddress","addressLocality":"București","addressCountry":"RO"}}
+{"@context":"https://schema.org","@type":"Person","name":"Robert Popa","jobTitle":"Builder / Full-stack Developer","email":"popa.robertalex@gmail.com","url":"https://robertpopa.dev","address":{"@type":"PostalAddress","addressLocality":"București","addressCountry":"RO"},"knowsAbout":["Web Development","WebGL","3D","Inteligență Artificială","Automatizări","React Native","E-commerce"]}
 </script>
 
-<!-- Fonturi: Cabinet Grotesk (display) + General Sans (body) — Fontshare, free commercial -->
 <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500&f[]=general-sans@400,500,600&f[]=space-mono@400&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500&f[]=general-sans@400,500,600&f[]=space-mono@400,700&display=swap" rel="stylesheet">
+<link rel="modulepreload" href="https://unpkg.com/three@0.160.0/build/three.module.js">
 
 <script type="importmap">
 { "imports": {
@@ -34,197 +32,163 @@
 
 <style>
 :root{
-  --bg:#060608; --bg-2:#0a0a12; --surface:rgba(255,255,255,.026);
-  --border:rgba(255,255,255,.08); --border-2:rgba(255,255,255,.16);
-  --text:#f3f3f8; --muted:#9292a6; --muted-2:#5e5e72;
-  --cy:#6ef6ff; --vi:#b48bff; --mg:#ff8fce; --go:#ffd98a;
-  --holo:linear-gradient(110deg,#6ef6ff 0%,#b48bff 36%,#ff8fce 64%,#ffd98a 100%);
-  --holo-soft:linear-gradient(110deg,rgba(110,246,255,.18),rgba(180,139,255,.16),rgba(255,143,206,.14));
+  --bg:#060608; --bg-2:#0a0a12; --surface:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.09); --border-2:rgba(255,255,255,.18);
+  --text:#f4f4f9; --muted:#aab; --muted-2:#6b6b80;
+  --cy:#8ff8ff; --vi:#c4a8ff; --mg:#ffb0dd; --go:#ffe2a0;
+  --holo:linear-gradient(110deg,#8ff8ff 0%,#c4a8ff 42%,#ffb0dd 68%,#ffe2a0 100%);
+  --holo-soft:linear-gradient(110deg,rgba(143,248,255,.16),rgba(196,168,255,.14),rgba(255,176,221,.12));
   --fd:'Cabinet Grotesk',sans-serif; --fb:'General Sans',system-ui,sans-serif; --fm:'Space Mono',monospace;
   --container:1280px; --ease:cubic-bezier(.19,1,.22,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{
-  font-family:var(--fb);background:var(--bg);color:var(--text);line-height:1.6;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;cursor:none;
-}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative;cursor:none}
 @media (pointer:coarse){body{cursor:auto}}
 a{color:inherit;text-decoration:none}
-img{max-width:100%;display:block}
 ::selection{background:var(--mg);color:#0a0a12}
 
-/* ---- atmosfera de fundal ---- */
-#scene{position:fixed;inset:0;z-index:0;pointer-events:none;transition:opacity .25s linear}
+#scene{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+.loaded #scene{opacity:1}
 .aura{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(60% 50% at 78% 28%,rgba(180,139,255,.14),transparent 70%),
-    radial-gradient(50% 40% at 18% 70%,rgba(110,246,255,.10),transparent 70%),
-    radial-gradient(40% 30% at 60% 88%,rgba(255,143,206,.08),transparent 70%);}
-.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background:radial-gradient(55% 45% at 80% 30%,rgba(196,168,255,.13),transparent 70%),
+    radial-gradient(45% 38% at 16% 72%,rgba(143,248,255,.09),transparent 70%)}
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
 .content{position:relative;z-index:2}
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0;z-index:70;background:var(--holo)}
 
-/* ---- cursor custom ---- */
-.cursor,.cursor-ring{position:fixed;top:0;left:0;z-index:90;pointer-events:none;border-radius:50%;
-  transform:translate(-50%,-50%);mix-blend-mode:difference}
-.cursor{width:8px;height:8px;background:#fff;transition:width .2s,height .2s}
-.cursor-ring{width:42px;height:42px;border:1px solid rgba(255,255,255,.5);
-  transition:width .3s var(--ease),height .3s var(--ease),opacity .3s}
-body.hov .cursor{width:0;height:0}
+.cursor,.cursor-ring{position:fixed;top:0;left:0;z-index:90;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference}
+.cursor{width:8px;height:8px;background:#fff}
+.cursor-ring{width:42px;height:42px;border:1px solid rgba(255,255,255,.5);transition:width .3s var(--ease),height .3s var(--ease),border-color .3s}
 body.hov .cursor-ring{width:74px;height:74px;border-color:var(--cy)}
 @media (pointer:coarse){.cursor,.cursor-ring{display:none}}
 
-/* ---- layout ---- */
 .wrap{max-width:var(--container);margin:0 auto;padding:0 32px}
-.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);
-  display:inline-flex;align-items:center;gap:10px}
+.eyebrow{font-family:var(--fm);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:10px}
 .eyebrow::before{content:"";width:26px;height:1px;background:var(--holo)}
-.holo-text{background:var(--holo);-webkit-background-clip:text;background-clip:text;color:transparent}
+.holo-text{background:var(--holo);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 22px rgba(160,190,255,.28))}
 
-/* ---- nav ---- */
-nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:22px 0;
-  transition:background .4s,backdrop-filter .4s,padding .4s,border-color .4s;border-bottom:1px solid transparent}
-nav.scrolled{background:rgba(6,6,8,.6);backdrop-filter:blur(18px) saturate(140%);padding:14px 0;border-color:var(--border)}
+nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:22px 0;transition:all .4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(6,6,8,.72);backdrop-filter:blur(18px) saturate(140%);padding:13px 0;border-color:var(--border)}
 .nav-in{display:flex;align-items:center;justify-content:space-between}
-.logo{font-family:var(--fd);font-weight:800;font-size:22px;letter-spacing:-.02em;display:flex;align-items:center;gap:11px}
-.logo .dot{width:13px;height:13px;border-radius:50%;background:var(--holo);box-shadow:0 0 22px rgba(180,139,255,.9);
-  animation:spinhue 6s linear infinite}
+.logo{font-family:var(--fd);font-weight:800;font-size:20px;letter-spacing:-.02em;display:flex;align-items:center;gap:11px}
+.logo .dot{width:13px;height:13px;border-radius:50%;background:var(--holo);box-shadow:0 0 20px rgba(196,168,255,.9);animation:spinhue 6s linear infinite}
 @keyframes spinhue{to{filter:hue-rotate(360deg)}}
-.nav-links{display:flex;gap:36px;align-items:center}
+.nav-links{display:flex;gap:34px;align-items:center}
 .nav-links a{font-size:14.5px;color:var(--muted);position:relative;transition:color .3s}
 .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;height:1px;width:0;background:var(--holo);transition:width .35s var(--ease)}
 .nav-links a:hover{color:var(--text)}.nav-links a:hover::after{width:100%}
-.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;
-  padding:12px 22px;border-radius:100px;border:1px solid var(--border-2);background:var(--surface);
-  transition:transform .35s var(--ease),box-shadow .35s,border-color .35s,background .35s;will-change:transform}
-.btn:hover{transform:translateY(-2px);border-color:transparent;box-shadow:0 14px 40px -10px rgba(180,139,255,.5)}
-.btn.solid{background:var(--holo);color:#080810;border:none;font-weight:600}
-.btn.solid:hover{box-shadow:0 18px 50px -10px rgba(255,143,206,.6)}
+.btn{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;padding:12px 22px;border-radius:100px;
+  border:1px solid var(--border-2);background:var(--surface);transition:transform .25s var(--ease),box-shadow .35s,border-color .35s;will-change:transform}
+.btn:hover{border-color:transparent;box-shadow:0 14px 40px -10px rgba(196,168,255,.5)}
+.btn.solid{background:var(--holo);color:#080810;border:none}
+.btn.solid:hover{box-shadow:0 18px 50px -10px rgba(255,176,221,.6)}
 .btn .arr{transition:transform .35s var(--ease)}.btn:hover .arr{transform:translate(4px,-4px)}
-.nav-cta{display:flex;gap:14px;align-items:center}
-.burger{display:none}
+.nav-cta{display:flex;gap:14px;align-items:center}.burger{display:none}
 
-/* ---- hero ---- */
+/* hero */
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:120px 0 60px}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;width:100%}
-.h-title{font-family:var(--fd);font-weight:800;line-height:.96;letter-spacing:-.03em;
-  font-size:clamp(46px,7.2vw,104px);margin:26px 0 28px}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(95deg,var(--bg) 18%,rgba(6,6,8,.72) 42%,transparent 72%)}
+.hero-inner{max-width:880px}
+.h-title{font-family:var(--fd);font-weight:800;line-height:.98;letter-spacing:-.03em;font-size:clamp(40px,6vw,86px);margin:22px 0 10px;text-wrap:balance}
 .h-title .line{display:block;overflow:hidden}
-.h-title .line > span{display:block;transform:translateY(110%);transition:transform 1s var(--ease)}
-.loaded .h-title .line > span{transform:translateY(0)}
-.h-title .line:nth-child(2) > span{transition-delay:.08s}
-.h-title .line:nth-child(3) > span{transition-delay:.16s}
-.h-sub{font-size:clamp(16px,1.5vw,19px);color:var(--muted);max-width:480px;
-  opacity:0;transform:translateY(20px);transition:all .9s var(--ease) .4s}
+.h-title .line>span{display:block;transform:translateY(110%);transition:transform 1s var(--ease)}
+.loaded .h-title .line>span{transform:translateY(0)}
+.h-title .line:nth-child(2)>span{transition-delay:.09s}
+.roles{font-family:var(--fm);font-size:clamp(15px,1.7vw,20px);color:var(--cy);height:1.4em;margin-bottom:24px;
+  opacity:0;transition:opacity .8s ease .5s}
+.loaded .roles{opacity:1}.roles b{color:var(--text);font-weight:400}.caret{color:var(--mg);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.h-sub{font-size:clamp(16px,1.5vw,19px);color:var(--muted);max-width:520px;opacity:0;transform:translateY(20px);transition:all .9s var(--ease) .55s}
 .loaded .h-sub{opacity:1;transform:none}
-.h-actions{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap;
-  opacity:0;transform:translateY(20px);transition:all .9s var(--ease) .55s}
+.h-actions{display:flex;gap:16px;margin-top:36px;flex-wrap:wrap;opacity:0;transform:translateY(20px);transition:all .9s var(--ease) .7s}
 .loaded .h-actions{opacity:1;transform:none}
-.hero-side{position:relative;height:520px;
-  opacity:0;transition:opacity 1.4s ease .3s}
-.loaded .hero-side{opacity:1}
-.spec-card{position:absolute;backdrop-filter:blur(14px);background:rgba(12,12,20,.5);
-  border:1px solid var(--border);border-radius:16px;padding:16px 18px;width:188px}
-.spec-card .k{font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:.1em}
-.spec-card .v{font-family:var(--fd);font-weight:700;font-size:30px;margin-top:4px}
-.spec-card:nth-child(1){top:10px;right:0;animation:floaty 7s ease-in-out infinite}
-.spec-card:nth-child(2){bottom:30px;left:-10px;animation:floaty 8s ease-in-out infinite reverse}
-@keyframes floaty{50%{transform:translateY(-16px)}}
-.scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-family:var(--fm);
-  font-size:11px;letter-spacing:.25em;color:var(--muted-2);display:flex;flex-direction:column;align-items:center;gap:10px}
-.scroll-cue .bar{width:1px;height:48px;background:linear-gradient(var(--muted),transparent);position:relative;overflow:hidden}
+.scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:11px;letter-spacing:.25em;color:var(--muted-2);display:flex;flex-direction:column;align-items:center;gap:10px}
+.scroll-cue .bar{width:1px;height:46px;background:linear-gradient(var(--muted),transparent);position:relative;overflow:hidden}
 .scroll-cue .bar::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--cy);animation:drop 2s var(--ease) infinite}
 @keyframes drop{to{top:120%}}
 
-/* ---- marquee ---- */
-.marquee{border-block:1px solid var(--border);padding:20px 0;margin-top:30px;overflow:hidden;
-  -webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.marquee-track{display:flex;gap:54px;width:max-content;animation:scrollx 26s linear infinite}
+.marquee{border-block:1px solid var(--border);padding:18px 0;overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);background:rgba(8,8,14,.4)}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:scrollx 28s linear infinite}
 .marquee:hover .marquee-track{animation-play-state:paused}
-.marquee span{font-family:var(--fd);font-weight:700;font-size:26px;color:var(--muted-2);display:flex;align-items:center;gap:54px;white-space:nowrap}
+.marquee span{font-family:var(--fd);font-weight:700;font-size:22px;color:var(--muted-2);display:flex;align-items:center;gap:48px;white-space:nowrap}
 .marquee span::after{content:"✦";color:var(--vi)}
 @keyframes scrollx{to{transform:translateX(-50%)}}
 
-/* ---- sectiuni ---- */
 section{padding:120px 0;position:relative}
-.sec-head{max-width:680px;margin-bottom:60px}
-.sec-head h2{font-family:var(--fd);font-weight:800;letter-spacing:-.025em;line-height:1.02;
-  font-size:clamp(34px,4.6vw,60px);margin:18px 0 16px}
-.sec-head p{color:var(--muted);font-size:17px;max-width:540px}
-
-.reveal{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.sec-head{max-width:720px;margin-bottom:56px}
+.sec-head h2{font-family:var(--fd);font-weight:800;letter-spacing:-.025em;line-height:1.02;font-size:clamp(32px,4.6vw,58px);margin:18px 0 16px}
+.sec-head p{color:var(--muted);font-size:17px;max-width:560px}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .reveal.in{opacity:1;transform:none}
-.reveal[data-d="1"]{transition-delay:.1s}.reveal[data-d="2"]{transition-delay:.2s}.reveal[data-d="3"]{transition-delay:.3s}
+.reveal[data-d="1"]{transition-delay:.08s}.reveal[data-d="2"]{transition-delay:.16s}.reveal[data-d="3"]{transition-delay:.24s}
 
-/* services — carduri 3D tilt */
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-.tilt{position:relative;border:1px solid var(--border);border-radius:22px;padding:34px;overflow:hidden;
-  background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.012));
-  transform-style:preserve-3d;transition:transform .25s var(--ease),border-color .4s;min-height:260px}
-.tilt::before{content:"";position:absolute;inset:0;border-radius:22px;padding:1px;background:var(--holo);
-  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
-  opacity:0;transition:opacity .4s}
-.tilt:hover::before{opacity:.7}
-.tilt .glow{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(180,139,255,.4),transparent 60%);
-  filter:blur(30px);opacity:0;transition:opacity .4s;pointer-events:none;transform:translate(-50%,-50%)}
-.tilt:hover .glow{opacity:.5}
-.tilt .num{font-family:var(--fm);font-size:12px;color:var(--muted-2);transform:translateZ(40px)}
-.tilt h3{font-family:var(--fd);font-weight:700;font-size:25px;margin:18px 0 12px;transform:translateZ(34px)}
-.tilt p{color:var(--muted);font-size:15.5px;transform:translateZ(20px)}
-.tilt .ico{font-size:34px;margin-bottom:6px;transform:translateZ(50px);filter:drop-shadow(0 6px 20px rgba(110,246,255,.4))}
+/* about */
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:54px;align-items:center}
+.about .lead{font-family:var(--fd);font-weight:500;font-size:clamp(22px,2.6vw,32px);line-height:1.28;letter-spacing:-.01em}
+.about p{color:var(--muted);margin-top:22px;font-size:16.5px;max-width:520px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stat{padding:26px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.stat .big{font-family:var(--fd);font-weight:800;font-size:clamp(38px,5vw,60px);letter-spacing:-.03em;line-height:1}
+.stat .lbl{color:var(--muted);font-size:13.5px;margin-top:8px;font-family:var(--fm);letter-spacing:.04em}
 
-/* showcase */
+/* tech stack */
+.stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stack-col{border:1px solid var(--border);border-radius:20px;padding:26px;background:var(--surface)}
+.stack-col h3{font-family:var(--fm);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cy);margin-bottom:18px}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{font-size:14px;padding:8px 14px;border-radius:100px;border:1px solid var(--border);color:var(--muted);
+  transition:all .25s var(--ease);cursor:default}
+.chip:hover{color:#0a0a12;background:var(--holo);border-color:transparent;transform:translateY(-3px)}
+
+/* projects */
 .work{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.work-card{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--border);
-  aspect-ratio:4/5;display:flex;flex-direction:column;justify-content:flex-end;padding:26px;
-  transition:transform .5s var(--ease),box-shadow .5s}
-.work-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(6,6,8,.85));z-index:1}
-.work-card .bg{position:absolute;inset:0;z-index:0;transition:transform .8s var(--ease);background-size:cover;background-position:center}
-.work-card:hover{transform:translateY(-8px);box-shadow:0 40px 80px -30px rgba(180,139,255,.4)}
+.work-card{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--border);aspect-ratio:4/5;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:26px;transition:transform .5s var(--ease),box-shadow .5s}
+.work-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,rgba(6,6,8,.9));z-index:1}
+.work-card .bg{position:absolute;inset:0;z-index:0;transition:transform .8s var(--ease);background-size:cover}
+.work-card:hover{transform:translateY(-8px);box-shadow:0 40px 80px -30px rgba(196,168,255,.4)}
 .work-card:hover .bg{transform:scale(1.08)}
 .work-card .meta{position:relative;z-index:2}
-.work-card .tag{font-family:var(--fm);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--cy)}
-.work-card h4{font-family:var(--fd);font-weight:700;font-size:24px;margin-top:8px}
-.work-1 .bg{background-image:linear-gradient(135deg,#1a1030,#3a1b4d),radial-gradient(circle at 30% 30%,#b48bff,transparent 50%)}
-.work-2 .bg{background-image:linear-gradient(135deg,#06222a,#0a3a44),radial-gradient(circle at 70% 30%,#6ef6ff,transparent 50%)}
-.work-3 .bg{background-image:linear-gradient(135deg,#2a0820,#491436),radial-gradient(circle at 50% 70%,#ff8fce,transparent 50%)}
+.work-card .tag{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--cy)}
+.work-card h4{font-family:var(--fd);font-weight:700;font-size:23px;margin-top:8px}
+.work-card p{color:#c8c8d6;font-size:14px;margin-top:6px}
+.w1 .bg{background-image:linear-gradient(140deg,#1a1030,#3a1b4d),radial-gradient(circle at 30% 25%,#c4a8ff,transparent 50%)}
+.w2 .bg{background-image:linear-gradient(140deg,#06222a,#0a3a44),radial-gradient(circle at 70% 25%,#8ff8ff,transparent 50%)}
+.w3 .bg{background-image:linear-gradient(140deg,#2a0820,#491436),radial-gradient(circle at 50% 70%,#ffb0dd,transparent 50%)}
+.w4 .bg{background-image:linear-gradient(140deg,#0c1f12,#16402a),radial-gradient(circle at 30% 70%,#7fffc0,transparent 50%)}
+.w5 .bg{background-image:linear-gradient(140deg,#2a1c06,#4d3712),radial-gradient(circle at 70% 30%,#ffe2a0,transparent 50%)}
+.w6 .bg{background-image:linear-gradient(140deg,#120c2a,#241644),radial-gradient(circle at 50% 30%,#b48bff,transparent 50%)}
 
-/* process + stats */
-.proc{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;border-top:1px solid var(--border);padding-top:8px}
-.step{padding:28px 0;border-top:2px solid transparent;transition:border-color .4s}
-.step:hover{border-color:var(--vi)}
-.step .n{font-family:var(--fd);font-weight:800;font-size:54px;background:var(--holo);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.85}
-.step h4{font-family:var(--fd);font-weight:600;font-size:19px;margin:8px 0 8px}
-.step p{color:var(--muted);font-size:14.5px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:80px}
-.stat{text-align:center;padding:30px;border:1px solid var(--border);border-radius:20px;background:var(--surface)}
-.stat .big{font-family:var(--fd);font-weight:800;font-size:clamp(44px,6vw,76px);letter-spacing:-.03em;line-height:1}
-.stat .lbl{color:var(--muted);font-size:14px;margin-top:8px;font-family:var(--fm);letter-spacing:.08em}
+/* interactive lab */
+.lab{position:relative;border:1px solid var(--border);border-radius:28px;overflow:hidden;min-height:440px;display:flex;align-items:center}
+#net{position:absolute;inset:0;z-index:0}
+.lab-copy{position:relative;z-index:2;padding:56px;max-width:560px;pointer-events:none}
+.lab-copy h2{font-family:var(--fd);font-weight:800;font-size:clamp(28px,3.6vw,46px);letter-spacing:-.02em;line-height:1.05;margin-bottom:16px}
+.lab-copy p{color:var(--muted);font-size:16.5px}
+.lab-badge{display:inline-flex;gap:8px;font-family:var(--fm);font-size:12px;color:var(--cy);margin-top:22px;letter-spacing:.06em}
 
-/* CTA */
+/* cta + footer */
 .cta{text-align:center;border:1px solid var(--border);border-radius:32px;padding:84px 32px;position:relative;overflow:hidden;
-  background:radial-gradient(80% 120% at 50% 0%,rgba(180,139,255,.16),transparent 60%)}
-.cta h2{font-family:var(--fd);font-weight:800;font-size:clamp(38px,6vw,82px);letter-spacing:-.03em;line-height:1;margin-bottom:22px}
+  background:radial-gradient(80% 120% at 50% 0%,rgba(196,168,255,.16),transparent 60%)}
+.cta h2{font-family:var(--fd);font-weight:800;font-size:clamp(36px,6vw,80px);letter-spacing:-.03em;line-height:1;margin-bottom:22px}
 .cta p{color:var(--muted);font-size:18px;max-width:480px;margin:0 auto 36px}
-
-/* footer */
-footer{border-top:1px solid var(--border);padding:60px 0 40px;position:relative;z-index:2}
+footer{border-top:1px solid var(--border);padding:54px 0 40px;position:relative;z-index:2}
 .foot-grid{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start}
 .foot-grid .col h5{font-family:var(--fm);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted-2);margin-bottom:16px}
 .foot-grid .col a{display:block;color:var(--muted);font-size:15px;margin-bottom:10px;transition:color .3s}
 .foot-grid .col a:hover{color:var(--text)}
-.foot-bottom{display:flex;justify-content:space-between;margin-top:60px;padding-top:24px;border-top:1px solid var(--border);
-  color:var(--muted-2);font-size:13px;font-family:var(--fm);flex-wrap:wrap;gap:12px}
+.foot-bottom{display:flex;justify-content:space-between;margin-top:54px;padding-top:24px;border-top:1px solid var(--border);color:var(--muted-2);font-size:13px;font-family:var(--fm);flex-wrap:wrap;gap:12px}
 
-/* responsive */
 @media (max-width:980px){
-  .hero-grid{grid-template-columns:1fr}.hero-side{display:none}
-  .cards,.work,.proc,.stats{grid-template-columns:1fr}
-  .proc{gap:0}.nav-links{display:none}
-  .burger{display:block;font-size:24px;cursor:pointer}
+  .about,.stack-grid,.work{grid-template-columns:1fr}.nav-links{display:none}.burger{display:block;font-size:24px;cursor:pointer}
+  .hero::before{background:linear-gradient(180deg,rgba(6,6,8,.4),rgba(6,6,8,.85))}
 }
-@media (max-width:560px){.wrap{padding:0 20px}.work{grid-template-columns:1fr}}
+@media (max-width:560px){.wrap{padding:0 20px}.stats{grid-template-columns:1fr}.lab-copy{padding:34px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -232,269 +196,253 @@ footer{border-top:1px solid var(--border);padding:60px 0 40px;position:relative;
 <canvas id="scene"></canvas>
 <div class="aura"></div>
 <div class="grain"></div>
+<div class="progress" id="progress"></div>
 <div class="cursor"></div><div class="cursor-ring"></div>
 
 <div class="content">
 <nav id="nav"><div class="wrap nav-in">
-  <a href="#" class="logo"><span class="dot"></span>PRIZMA</a>
+  <a href="#" class="logo"><span class="dot"></span>ROBERT POPA</a>
   <div class="nav-links">
-    <a href="#studio">Studio</a><a href="#servicii">Servicii</a><a href="#lucrari">Lucrări</a><a href="#proces">Proces</a>
+    <a href="#despre">Despre</a><a href="#skills">Skill-uri</a><a href="#proiecte">Proiecte</a><a href="#lab">Lab</a>
   </div>
   <div class="nav-cta">
-    <a href="#contact" class="btn solid" data-h>Începe un proiect <span class="arr">↗</span></a>
+    <a href="#contact" class="btn solid" data-h data-mag>Hai să vorbim <span class="arr">↗</span></a>
     <span class="burger">≡</span>
   </div>
 </div></nav>
 
-<header class="hero"><div class="wrap hero-grid">
-  <div class="hero-main">
-    <span class="eyebrow">Studio de web imersiv · București</span>
-    <h1 class="h-title">
-      <span class="line"><span>Construim web</span></span>
-      <span class="line"><span>care se simte</span></span>
-      <span class="line"><span class="holo-text">din viitor.</span></span>
-    </h1>
-    <p class="h-sub">Experiențe 3D, WebGL și motion pentru brand-uri care refuză să arate ca toată lumea. Design care nu se uită.</p>
-    <div class="h-actions">
-      <a href="#contact" class="btn solid" data-h>Hai să construim <span class="arr">↗</span></a>
-      <a href="#lucrari" class="btn" data-h>Vezi lucrări</a>
-    </div>
-  </div>
-  <div class="hero-side">
-    <div class="spec-card"><div class="k">RANDARE</div><div class="v holo-text">60 FPS</div></div>
-    <div class="spec-card"><div class="k">WEBGL · 3D</div><div class="v">REAL-TIME</div></div>
+<header class="hero"><div class="wrap hero-inner">
+  <span class="eyebrow">Builder · București · disponibil pentru proiecte</span>
+  <h1 class="h-title">
+    <span class="line"><span>Transform idei în</span></span>
+    <span class="line"><span>produse <span class="holo-text">din viitor.</span></span></span>
+  </h1>
+  <div class="roles">Construiesc <b id="typed">produse web</b><span class="caret">_</span></div>
+  <p class="h-sub">Sunt Robert. Construiesc de la zero afaceri digitale automatizate — web design 3D, e-commerce, aplicații mobile și motoare de marketing cu AI care generează singure conținut. Solo, dar livrez ca o echipă.</p>
+  <div class="h-actions">
+    <a href="#proiecte" class="btn solid" data-h data-mag>Vezi ce am construit <span class="arr">↗</span></a>
+    <a href="#contact" class="btn" data-h data-mag>Contact</a>
   </div>
 </div>
 <div class="scroll-cue">SCROLL<div class="bar"></div></div>
 </header>
 
 <div class="marquee"><div class="marquee-track">
-  <span>BRAND</span><span>WEBGL</span><span>MOTION</span><span>3D</span><span>INTERFEȚE</span><span>SHADERE</span>
-  <span>BRAND</span><span>WEBGL</span><span>MOTION</span><span>3D</span><span>INTERFEȚE</span><span>SHADERE</span>
+  <span>WEBGL</span><span>AI</span><span>REACT</span><span>NODE</span><span>3D</span><span>AUTOMATIZĂRI</span><span>E-COMMERCE</span><span>MOBILE</span>
+  <span>WEBGL</span><span>AI</span><span>REACT</span><span>NODE</span><span>3D</span><span>AUTOMATIZĂRI</span><span>E-COMMERCE</span><span>MOBILE</span>
 </div></div>
 
-<section id="studio"><div class="wrap">
-  <div class="sec-head reveal">
-    <span class="eyebrow">Studio</span>
-    <h2>Nu facem site-uri. <span class="holo-text">Construim experiențe.</span></h2>
-    <p>Suntem un studio mic, obsedat de detaliu. Combinăm design editorial, 3D real-time și inginerie de interfață ca să livrăm produse digitale care opresc scroll-ul.</p>
+<section id="despre"><div class="wrap about">
+  <div class="reveal">
+    <span class="eyebrow">Cine sunt</span>
+    <p class="lead">Combin <span class="holo-text">design, cod și automatizare</span> ca să construiesc produse care nu doar arată bine — funcționează și aduc rezultate.</p>
+    <p>Sunt obsedat de detaliu, viteză și lucruri care ies din tipar. Pornesc de la o idee și o duc până la produs live: design, frontend, backend, deploy, marketing. Iar acolo unde munca se repetă, o automatizez.</p>
   </div>
-  <div class="cards" id="servicii">
-    <article class="tilt" data-h><div class="glow"></div>
-      <div class="ico">◳</div><div class="num">01 — SERVICIU</div>
-      <h3>Design imersiv</h3><p>Interfețe cu profunzime: parallax, scroll-driven, micro-interacțiuni care răspund la fiecare gest. UX care se simte viu.</p>
-    </article>
-    <article class="tilt" data-h><div class="glow"></div>
-      <div class="ico">◈</div><div class="num">02 — SERVICIU</div>
-      <h3>Dezvoltare WebGL</h3><p>Scene 3D și shadere rulate direct în browser, optimizate pentru 60fps pe mobil. Fără plugin-uri, fără compromis.</p>
-    </article>
-    <article class="tilt" data-h><div class="glow"></div>
-      <div class="ico">❖</div><div class="num">03 — SERVICIU</div>
-      <h3>Motion & 3D</h3><p>Animații cu intenție: tranziții cinematice, obiecte 3D care morfează, ritm vizual care ghidează ochiul.</p>
-    </article>
-    <article class="tilt" data-h><div class="glow"></div>
-      <div class="ico">◴</div><div class="num">04 — SERVICIU</div>
-      <h3>Brand digital</h3><p>Identitate vizuală gândită pentru ecran: sistem de design, tipografie, paletă și ton care funcționează peste tot.</p>
-    </article>
+  <div class="stats reveal" data-d="1">
+    <div class="stat"><div class="big holo-text" data-target="8" data-suf="+">0</div><div class="lbl">PRODUSE LANSATE</div></div>
+    <div class="stat"><div class="big" data-target="20" data-suf="+">0</div><div class="lbl">TEHNOLOGII</div></div>
+    <div class="stat"><div class="big holo-text" data-target="100" data-suf="%">0</div><div class="lbl">LIVRAT SOLO</div></div>
+    <div class="stat"><div class="big" data-target="60" data-suf="fps">0</div><div class="lbl">PERFORMANȚĂ</div></div>
   </div>
 </div></section>
 
-<section id="lucrari"><div class="wrap">
-  <div class="sec-head reveal"><span class="eyebrow">Lucrări selectate</span>
-    <h2>Proiecte care <span class="holo-text">ies din tipar.</span></h2></div>
+<section id="skills"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">Stack</span>
+    <h2>Folosesc <span class="holo-text">orice e nevoie</span> ca să livrez.</h2>
+    <p>De la pixel la server, de la 3D real-time la AI. Iată o parte din uneltele cu care lucrez zilnic.</p></div>
+  <div class="stack-grid">
+    <div class="stack-col reveal"><h3>Frontend & 3D</h3><div class="chips">
+      <span class="chip" data-h>JavaScript</span><span class="chip" data-h>TypeScript</span><span class="chip" data-h>React</span><span class="chip" data-h>HTML/CSS</span><span class="chip" data-h>WebGL</span><span class="chip" data-h>Three.js</span><span class="chip" data-h>GLSL Shaders</span><span class="chip" data-h>Canvas</span><span class="chip" data-h>CSS Animations</span></div></div>
+    <div class="stack-col reveal" data-d="1"><h3>Backend & Infra</h3><div class="chips">
+      <span class="chip" data-h>Node.js</span><span class="chip" data-h>Serverless</span><span class="chip" data-h>Vercel</span><span class="chip" data-h>Redis</span><span class="chip" data-h>REST API</span><span class="chip" data-h>Git / GitHub</span><span class="chip" data-h>SQL</span></div></div>
+    <div class="stack-col reveal" data-d="2"><h3>AI, Automatizări & Mobile</h3><div class="chips">
+      <span class="chip" data-h>LLM / Claude</span><span class="chip" data-h>Automatizări</span><span class="chip" data-h>Generare video</span><span class="chip" data-h>TTS / Voce</span><span class="chip" data-h>Web scraping</span><span class="chip" data-h>React Native</span><span class="chip" data-h>Expo</span><span class="chip" data-h>SEO</span><span class="chip" data-h>UI/UX</span></div></div>
+  </div>
+</div></section>
+
+<section id="proiecte"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow">Proiecte</span>
+    <h2>Lucruri pe care <span class="holo-text">le-am construit.</span></h2>
+    <p>Produse reale, lansate, de la idee la live. Fiecare construit solo.</p></div>
   <div class="work">
-    <a class="work-card work-1 reveal" data-d="1" data-h href="#"><div class="bg"></div>
-      <div class="meta"><span class="tag">3D · WebGL</span><h4>Nebula Commerce</h4></div></a>
-    <a class="work-card work-2 reveal" data-d="2" data-h href="#"><div class="bg"></div>
-      <div class="meta"><span class="tag">Brand · Motion</span><h4>Halcyon Labs</h4></div></a>
-    <a class="work-card work-3 reveal" data-d="3" data-h href="#"><div class="bg"></div>
-      <div class="meta"><span class="tag">UI · Imersiv</span><h4>Atlas Festival</h4></div></a>
+    <a class="work-card w1 reveal" data-d="1" data-h href="#"><div class="bg"></div><div class="meta"><span class="tag">AI · Automation · Node</span><h4>GrowthEngine</h4><p>Motor de marketing care generează singur video, voce și personaje animate.</p></div></a>
+    <a class="work-card w2 reveal" data-d="2" data-h href="#"><div class="bg"></div><div class="meta"><span class="tag">Automation · Generative</span><h4>WebAgencyAI</h4><p>Agenție web automatizată: prospectare → site unic → deploy.</p></div></a>
+    <a class="work-card w3 reveal" data-d="3" data-h href="#"><div class="bg"></div><div class="meta"><span class="tag">Web · SEO · Node</span><h4>undevedemmeciul.ro</h4><p>Platformă pentru Mondial 2026: unde vezi meciul, program, localuri.</p></div></a>
+    <a class="work-card w4 reveal" data-d="1" data-h href="#"><div class="bg"></div><div class="meta"><span class="tag">React Native · Expo</span><h4>FocusNow</h4><p>Aplicație mobilă de focus & rutine pentru minți agitate.</p></div></a>
+    <a class="work-card w5 reveal" data-d="2" data-h href="#"><div class="bg"></div><div class="meta"><span class="tag">Vercel · Redis · Serverless</span><h4>E-commerce</h4><p>Magazine online cu plată, stoc atomic și panou admin.</p></div></a>
+    <a class="work-card w6 reveal" data-d="3" data-h href="#"><div class="bg"></div><div class="meta"><span class="tag">WebGL · Three.js · GLSL</span><h4>Experiențe 3D</h4><p>Site-uri imersive — exact ca cel pe care îl vezi acum.</p></div></a>
   </div>
 </div></section>
 
-<section id="proces"><div class="wrap">
-  <div class="sec-head reveal"><span class="eyebrow">Cum lucrăm</span>
-    <h2>Un proces <span class="holo-text">clar și rapid.</span></h2></div>
-  <div class="proc">
-    <div class="step reveal"><div class="n">01</div><h4>Descoperire</h4><p>Înțelegem brand-ul, publicul și obiectivul. Definim direcția.</p></div>
-    <div class="step reveal" data-d="1"><div class="n">02</div><h4>Concept</h4><p>Direcție vizuală, prototip de mișcare și 3D. Validăm devreme.</p></div>
-    <div class="step reveal" data-d="2"><div class="n">03</div><h4>Producție</h4><p>Design final + cod. Performanță, accesibilitate, detaliu.</p></div>
-    <div class="step reveal" data-d="3"><div class="n">04</div><h4>Lansare</h4><p>Punem live, măsurăm și optimizăm. Rămânem alături.</p></div>
-  </div>
-  <div class="stats">
-    <div class="stat reveal"><div class="big holo-text" data-target="80">0</div><div class="lbl">PROIECTE LIVRATE</div></div>
-    <div class="stat reveal" data-d="1"><div class="big" data-target="60">0</div><div class="lbl">FPS GARANTAȚI</div></div>
-    <div class="stat reveal" data-d="2"><div class="big holo-text" data-target="12">0</div><div class="lbl">PREMII DE DESIGN</div></div>
+<section id="lab"><div class="wrap">
+  <div class="lab reveal">
+    <canvas id="net"></canvas>
+    <div class="lab-copy">
+      <h2>Construit cu cod, <span class="holo-text">nu cu șabloane.</span></h2>
+      <p>Acest site rulează 3D real-time în browser, o constelație interactivă pe canvas și animații conduse de scroll — fără page builder, fără framework greu. Mișcă mouse-ul peste această zonă.</p>
+      <span class="lab-badge">✦ WebGL · GLSL · Canvas 2D · IntersectionObserver · zero framework</span>
+    </div>
   </div>
 </div></section>
 
 <section id="contact"><div class="wrap">
   <div class="cta reveal">
-    <h2>Hai să construim ceva<br><span class="holo-text">memorabil.</span></h2>
-    <p>Spune-ne ce ai în cap. Răspundem în 24 de ore cu o direcție.</p>
-    <a href="mailto:hello@prizma.studio" class="btn solid" data-h>hello@prizma.studio <span class="arr">↗</span></a>
+    <h2>Ai o idee?<br><span class="holo-text">Hai s-o construim.</span></h2>
+    <p>Răspund repede. Spune-mi ce ai în cap și-ți zic cum o transformăm în produs.</p>
+    <a href="mailto:popa.robertalex@gmail.com" class="btn solid" data-h data-mag>popa.robertalex@gmail.com <span class="arr">↗</span></a>
   </div>
 </div></section>
 
 <footer><div class="wrap">
   <div class="foot-grid">
     <div class="col" style="max-width:300px">
-      <a href="#" class="logo" style="margin-bottom:14px"><span class="dot"></span>PRIZMA</a>
-      <p style="color:var(--muted);font-size:15px">Studio de web imersiv & 3D. Construim experiențe digitale care se simt din viitor.</p>
+      <a href="#" class="logo" style="margin-bottom:14px"><span class="dot"></span>ROBERT POPA</a>
+      <p style="color:var(--muted);font-size:15px">Builder din București. Construiesc produse digitale care par din viitor.</p>
     </div>
-    <div class="col"><h5>Navigare</h5><a href="#studio">Studio</a><a href="#servicii">Servicii</a><a href="#lucrari">Lucrări</a><a href="#proces">Proces</a></div>
-    <div class="col"><h5>Social</h5><a href="#" data-h>Instagram</a><a href="#" data-h>Behance</a><a href="#" data-h>Dribbble</a><a href="#" data-h>LinkedIn</a></div>
-    <div class="col"><h5>Contact</h5><a href="mailto:hello@prizma.studio" data-h>hello@prizma.studio</a><a href="tel:+40721000000">+40 721 000 000</a><a href="#">București, RO</a></div>
+    <div class="col"><h5>Navigare</h5><a href="#despre">Despre</a><a href="#skills">Skill-uri</a><a href="#proiecte">Proiecte</a><a href="#lab">Lab</a></div>
+    <div class="col"><h5>Social</h5><a href="#" data-h>GitHub</a><a href="#" data-h>LinkedIn</a><a href="#" data-h>Instagram</a></div>
+    <div class="col"><h5>Contact</h5><a href="mailto:popa.robertalex@gmail.com" data-h>popa.robertalex@gmail.com</a><a href="#">București, RO</a></div>
   </div>
-  <div class="foot-bottom"><span>© 2026 PRIZMA STUDIO</span><span>CONSTRUIT CU WEBGL ✦ FĂRĂ TIPARE</span></div>
+  <div class="foot-bottom"><span>© 2026 ROBERT POPA</span><span>CONSTRUIT CU WEBGL ✦ FĂRĂ TIPARE</span></div>
 </div></footer>
 </div>
 
 <script type="module">
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+/* ====== UI (rulează imediat, nu așteaptă 3D) ====== */
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-/* ====== SCENA 3D: obiect iridescent care morfează (liquid chrome) ====== */
-const canvas = document.getElementById('scene');
-const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-let renderer, composer, camera;
-try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, powerPreference:'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+// apariție rapidă (nu așteptăm CDN-ul Three)
+const reveal=()=>document.body.classList.add('loaded');
+if(document.readyState!=='loading')reveal();else addEventListener('DOMContentLoaded',reveal);
 
-  const scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.1, 100);
-  camera.position.set(0, 0, 6.4);
+// cursor
+const cur=$('.cursor'),ring=$('.cursor-ring');let cx=innerWidth/2,cy=innerHeight/2,rx=cx,ry=cy;
+addEventListener('pointermove',e=>{cx=e.clientX;cy=e.clientY;cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;},{passive:true});
+(function r(){rx+=(cx-rx)*.2;ry+=(cy-ry)*.2;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(r);})();
+$$('[data-h]').forEach(el=>{el.addEventListener('pointerenter',()=>document.body.classList.add('hov'));el.addEventListener('pointerleave',()=>document.body.classList.remove('hov'));});
 
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-  const uniforms = { uTime:{value:0}, uAmp:{value:0} };
-  const NOISE = `
-  vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
-  vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
-  float snoise(vec3 v){
-    const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
-    vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-    vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
-    vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
-    i=mod(i,289.0);
-    vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
-    float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;
-    vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
-    vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);
-    vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
-    vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));
-    vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-    vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-    vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
-    p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-    vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
-    return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-  }`;
-  const mat = new THREE.MeshPhysicalMaterial({
-    color:0x111118, metalness:1.0, roughness:0.18, clearcoat:1.0, clearcoatRoughness:0.25,
-    iridescence:1.0, iridescenceIOR:1.6, iridescenceThicknessRange:[120,520], envMapIntensity:1.5
-  });
-  mat.onBeforeCompile = (sh)=>{
-    sh.uniforms.uTime=uniforms.uTime; sh.uniforms.uAmp=uniforms.uAmp;
-    sh.vertexShader = `uniform float uTime;uniform float uAmp;\n${NOISE}\n`+sh.vertexShader;
-    sh.vertexShader = sh.vertexShader.replace('#include <begin_vertex>',`
-      #include <begin_vertex>
-      float n = snoise(normal*1.3 + uTime*0.22);
-      float n2 = snoise(position*0.9 - uTime*0.16);
-      transformed += normal * (n*0.42 + n2*0.30) * uAmp;`);
-  };
-  const geo = new THREE.IcosahedronGeometry(1.85, 64);
-  const blob = new THREE.Mesh(geo, mat);
-  scene.add(blob);
-
-  // lumini de accent (holografice)
-  const l1 = new THREE.PointLight(0x6ef6ff, 30, 30); l1.position.set(-4,3,4); scene.add(l1);
-  const l2 = new THREE.PointLight(0xff8fce, 26, 30); l2.position.set(4,-2,3); scene.add(l2);
-  const l3 = new THREE.PointLight(0xb48bff, 20, 30); l3.position.set(0,4,-3); scene.add(l3);
-
-  composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight), 0.7, 0.6, 0.85);
-  composer.addPass(bloom);
-  composer.addPass(new OutputPass());
-
-  // interactiune
-  let mx=0,my=0,tx=0,ty=0;
-  addEventListener('pointermove',e=>{ mx=(e.clientX/innerWidth-.5); my=(e.clientY/innerHeight-.5); },{passive:true});
-  addEventListener('resize',()=>{
-    camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);
-  });
-  // intro: creste amplitudinea
-  let t0=performance.now();
-  const clock = new THREE.Clock();
-  (function loop(){
-    requestAnimationFrame(loop);
-    const t=clock.getElapsedTime();
-    uniforms.uTime.value=t;
-    const intro=Math.min((performance.now()-t0)/1800,1);
-    uniforms.uAmp.value = reduce?0.32:(0.16+0.2*intro+Math.sin(t*0.8)*0.04);
-    tx+=(mx-tx)*0.05; ty+=(my-ty)*0.05;
-    blob.rotation.y += 0.0024 + tx*0.02;
-    blob.rotation.x = ty*0.5;
-    camera.position.x = tx*1.1; camera.position.y = -ty*0.8; camera.lookAt(0,0,0);
-    l1.position.x = Math.sin(t*0.5)*4; l2.position.y = Math.cos(t*0.6)*3;
-    composer.render();
-  })();
-} catch(err){
-  // fallback elegant daca WebGL nu e disponibil
-  canvas.style.display='none';
-  document.querySelector('.aura').style.background='radial-gradient(50% 50% at 70% 35%,rgba(180,139,255,.25),transparent 70%),radial-gradient(40% 40% at 25% 70%,rgba(110,246,255,.2),transparent 70%)';
-}
-
-/* ====== UI: cursor, nav, tilt, reveal, counters ====== */
-const cur=document.querySelector('.cursor'), ring=document.querySelector('.cursor-ring');
-let cx=innerWidth/2,cy=innerHeight/2,rx=cx,ry=cy;
-addEventListener('pointermove',e=>{cx=e.clientX;cy=e.clientY;cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;});
-(function ringLoop(){rx+=(cx-rx)*.18;ry+=(cy-ry)*.18;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(ringLoop);})();
-document.querySelectorAll('[data-h]').forEach(el=>{el.addEventListener('pointerenter',()=>document.body.classList.add('hov'));el.addEventListener('pointerleave',()=>document.body.classList.remove('hov'));});
-
-const nav=document.getElementById('nav');
-addEventListener('scroll',()=>{
-  nav.classList.toggle('scrolled',scrollY>40);
-  canvas.style.opacity=Math.max(.16,1-scrollY/innerHeight);
-},{passive:true});
-
-// tilt 3D pe carduri
-document.querySelectorAll('.tilt').forEach(card=>{
-  const glow=card.querySelector('.glow');
-  card.addEventListener('pointermove',e=>{
-    const r=card.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
-    card.style.transform=`perspective(900px) rotateY(${(px-.5)*12}deg) rotateX(${-(py-.5)*12}deg) translateY(-4px)`;
-    if(glow){glow.style.left=px*r.width+'px';glow.style.top=py*r.height+'px';}
-  });
-  card.addEventListener('pointerleave',()=>card.style.transform='');
+// magnetic buttons
+$$('[data-mag]').forEach(el=>{
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.25}px,${(e.clientY-r.top-r.height/2)*.35}px)`;});
+  el.addEventListener('pointerleave',()=>el.style.transform='');
 });
 
-// reveal la scroll
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.18});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// nav + progress + canvas fade
+const nav=$('#nav'),prog=$('#progress'),scene=$('#scene');
+addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',scrollY>40);
+  const max=document.documentElement.scrollHeight-innerHeight;
+  prog.style.transform=`scaleX(${max>0?scrollY/max:0})`;
+  scene.style.opacity=Math.max(.14,1-scrollY/innerHeight);
+},{passive:true});
 
-// counters
+// typed roles
+const roles=['produse web','automatizări AI','experiențe 3D','aplicații mobile','sisteme care lucrează singure'];
+const typedEl=$('#typed');let ri=0,ci=0,del=false;
+(function type(){
+  const w=roles[ri];typedEl.textContent=del?w.slice(0,--ci):w.slice(0,++ci);
+  if(!del&&ci===w.length){del=true;setTimeout(type,1400);return;}
+  if(del&&ci===0){del=false;ri=(ri+1)%roles.length;}
+  setTimeout(type,del?40:75);
+})();
+
+// reveal + counters
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.16});
+$$('.reveal').forEach(el=>io.observe(el));
 const cio=new IntersectionObserver(es=>es.forEach(e=>{
-  if(!e.isIntersecting)return; cio.unobserve(e.target);
-  const el=e.target,tgt=+el.dataset.target;let v=0;const step=tgt/60;
-  const t=setInterval(()=>{v+=step;if(v>=tgt){v=tgt;clearInterval(t);}el.textContent=Math.round(v);},18);
-}),{threshold:.5});
-document.querySelectorAll('[data-target]').forEach(el=>cio.observe(el));
+  if(!e.isIntersecting)return;cio.unobserve(e.target);
+  const el=e.target,t=+el.dataset.target,suf=el.dataset.suf||'';let v=0;const st=t/55;
+  const id=setInterval(()=>{v+=st;if(v>=t){v=t;clearInterval(id);}el.textContent=Math.round(v)+suf;},18);
+}),{threshold:.6});
+$$('[data-target]').forEach(el=>cio.observe(el));
 
-// load
-addEventListener('load',()=>document.body.classList.add('loaded'));
-setTimeout(()=>document.body.classList.add('loaded'),600);
+/* ====== Constelație interactivă (Canvas 2D, deferită, pauză când nu e vizibilă) ====== */
+function initNet(){
+  const c=$('#net'),x=c.getContext('2d');let W,H,pts=[],mouse={x:-999,y:-999},on=false;
+  const DPR=Math.min(devicePixelRatio,1.5);
+  function size(){const r=c.getBoundingClientRect();W=c.width=r.width*DPR;H=c.height=r.height*DPR;
+    const n=Math.min(80,Math.floor(r.width*r.height/14000));pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25*DPR,vy:(Math.random()-.5)*.25*DPR}));}
+  size();addEventListener('resize',size);
+  c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();mouse.x=(e.clientX-r.left)*DPR;mouse.y=(e.clientY-r.top)*DPR;});
+  c.addEventListener('pointerleave',()=>{mouse.x=mouse.y=-999;});
+  new IntersectionObserver(es=>{on=es[0].isIntersecting;if(on)loop();}).observe(c);
+  function loop(){
+    if(!on||reduce)return;
+    x.clearRect(0,0,W,H);
+    for(const p of pts){
+      const dx=mouse.x-p.x,dy=mouse.y-p.y,d=Math.hypot(dx,dy);
+      if(d<160*DPR){p.vx+=dx/d*.04;p.vy+=dy/d*.04;}
+      p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.vy*=.99;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    }
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(d<120*DPR){x.strokeStyle=`rgba(160,190,255,${(1-d/(120*DPR))*.32})`;x.lineWidth=DPR;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();}
+      }
+      x.fillStyle='rgba(196,168,255,.8)';x.beginPath();x.arc(pts[i].x,pts[i].y,1.6*DPR,0,7);x.fill();
+    }
+    requestAnimationFrame(loop);
+  }
+}
+setTimeout(initNet,350);
+
+/* ====== Scena 3D (deferită; optimizată) ====== */
+setTimeout(async()=>{
+ try{
+  const THREE=await import('three');
+  const {RoomEnvironment}=await import('three/addons/environments/RoomEnvironment.js');
+  const {EffectComposer}=await import('three/addons/postprocessing/EffectComposer.js');
+  const {RenderPass}=await import('three/addons/postprocessing/RenderPass.js');
+  const {UnrealBloomPass}=await import('three/addons/postprocessing/UnrealBloomPass.js');
+  const {OutputPass}=await import('three/addons/postprocessing/OutputPass.js');
+  const canvas=$('#scene');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  renderer.setSize(innerWidth,innerHeight);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,0.1,100);camera.position.set(0,0,6.4);
+  const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+  const uniforms={uTime:{value:0},uAmp:{value:0}};
+  const NOISE=`vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+  float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
+  i=mod(i,289.0);vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+  float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
+  vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+  vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`;
+  const mat=new THREE.MeshPhysicalMaterial({color:0x0e0e16,metalness:1.0,roughness:0.16,clearcoat:1.0,clearcoatRoughness:0.22,iridescence:1.0,iridescenceIOR:1.7,iridescenceThicknessRange:[120,560],envMapIntensity:1.6});
+  mat.onBeforeCompile=sh=>{sh.uniforms.uTime=uniforms.uTime;sh.uniforms.uAmp=uniforms.uAmp;
+    sh.vertexShader=`uniform float uTime;uniform float uAmp;\n${NOISE}\n`+sh.vertexShader;
+    sh.vertexShader=sh.vertexShader.replace('#include <begin_vertex>',`#include <begin_vertex>
+      float n=snoise(normal*1.3+uTime*0.22);float n2=snoise(position*0.9-uTime*0.16);transformed+=normal*(n*0.42+n2*0.30)*uAmp;`);};
+  const blob=new THREE.Mesh(new THREE.IcosahedronGeometry(1.9,24),mat);blob.position.x=1.95;scene.add(blob);
+  const addLight=(c,i,x,y,z)=>{const l=new THREE.PointLight(c,i,32);l.position.set(x,y,z);scene.add(l);};
+  addLight(0x8ff8ff,36,0.3,2.6,4.6);
+  addLight(0xffb0dd,34,4.0,-1.4,4.0);
+  addLight(0xc4a8ff,28,2.0,0.6,5.4);
+  const composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));
+  composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),0.72,0.6,0.88));
+  composer.addPass(new OutputPass());
+  let mx=0,my=0,tx=0,ty=0;
+  addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;},{passive:true});
+  addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);});
+  const clock=new THREE.Clock();const t0=performance.now();let vis=true;
+  document.addEventListener('visibilitychange',()=>vis=!document.hidden);
+  (function loop(){requestAnimationFrame(loop);if(!vis)return;
+    const t=clock.getElapsedTime();uniforms.uTime.value=t;
+    uniforms.uAmp.value=reduce?0.3:0.18+0.2*Math.min((performance.now()-t0)/1800,1)+Math.sin(t*0.8)*0.04;
+    tx+=(mx-tx)*.05;ty+=(my-ty)*.05;blob.rotation.y+=0.0022+tx*0.02;blob.rotation.x=ty*0.5;
+    camera.position.x=tx*1.0;camera.position.y=-ty*0.7;camera.lookAt(0,0,0);composer.render();})();
+ }catch(err){
+  $('#scene').style.display='none';
+  $('.aura').style.background='radial-gradient(50% 50% at 78% 32%,rgba(196,168,255,.22),transparent 70%),radial-gradient(40% 40% at 22% 70%,rgba(143,248,255,.16),transparent 70%)';
+ }
+},250);
 </script>
 </body>
 </html>
